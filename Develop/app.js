@@ -71,6 +71,129 @@ function teamApp() {
         });
     }
 
+    function createTeam() {
+        inquirer.prompt([
+            {
+                type: "list",
+                name: "newMember",
+                message: "Which member do you want to add?",
+                choices: [
+                    "Engineer",
+                    "Intern",
+                    "No more team members to add"
+                ]
+            }
+        ]).then(userChoice => {
+            if(userChoice.newMember === "Engineer") {
+                addEngineer();
+            } else if (userChoice.newMember === "Intern"){
+                addIntern();
+            } else {
+                buildTeam();
+            }
+        })
+    }
+
+    function addEngineer() {
+        inquirer.prompt([
+            {
+                type: "input", 
+                name: "engineerName",
+                message: "What is the engineers name?",
+                validate: answer => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                }
+            },
+            {
+                type: "input",
+                name: "engineerId",
+                message: "What is the engineers Id?",
+                validate: answer => {
+                    const pass = answer.match(/^[1-9]\d*$/);
+                }
+            },
+            {
+                type: "input",
+                name: "engineerEmail",
+                message: "What is the engineers Email?",
+                validate: answer => {
+                    const pass = answer.match(/\S+@\S+\.\S+/);
+                    if (pass) {
+                        return true;
+                    }
+                }
+            },
+            {
+                type: "input",
+                name: "engineerGithub",
+                message: "What is the engineers github username?",
+                validate: answer => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                }
+            }
+        ]).then(answers => {
+            const engineer = newEngineer(answers.engineerName, answers.engineerId, answers.engineerEmail, answers.engineerGithub)
+            teamMembers.push(engineer);
+            idArray.push(answers.engineerId);
+            createTeam();
+        })
+    }
+
+    function addIntern() {
+        inquirer.prompt([
+            {
+                type: "input", 
+                name: "internName",
+                message: "What is the interns name?",
+                validate: answer => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                }
+            },
+            {
+                type: "input",
+                name: "internId",
+                message: "What is the interns Id?",
+                validate: answer => {
+                    const pass = answer.match(/^[1-9]\d*$/);
+                }
+            },
+            {
+                type: "input",
+                name: "internEmail",
+                message: "What is the interns Email?",
+                validate: answer => {
+                    const pass = answer.match(/\S+@\S+\.\S+/);
+                    if (pass) {
+                        return true;
+                    }
+                }
+            },
+            {
+                type: "input",
+                name: "internSchool",
+                message: "what school does the intern attend?",
+                validate: answer => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                }
+            }
+
+        ]).then(answers => {
+            const intern = new Intern(answers.internName, answers.internId, answers.internEmail, answers.internSchool);
+            teamMembers.push(intern);
+            idArray.push(answers.internId);
+            createTeam();
+        })
+    }
+
+
     createManager();
 }
 
